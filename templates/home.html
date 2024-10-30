@@ -8,26 +8,31 @@
 <body>
     <h1>Upload JSON to Generate Excel</h1>
     <form id="uploadForm">
+        <label for="jsonFile">Upload JSON:</label>
         <input type="file" id="jsonFile" accept="application/json" required>
+        
+        <label for="imageFile">Upload Image:</label>
+        <input type="file" id="imageFile" accept="image/*" required>
+        
         <button type="submit">Upload and Convert</button>
     </form>
     <script>
         document.getElementById('uploadForm').addEventListener('submit', async function(event) {
             event.preventDefault();
 
-            const fileInput = document.getElementById('jsonFile');
-            const file = fileInput.files[0];
+            const jsonFileInput = document.getElementById('jsonFile');
+            const imageFileInput = document.getElementById('imageFile');
+            const jsonFile = jsonFileInput.files[0];
+            const imageFile = imageFileInput.files[0];
 
-            if (file) {
+            if (jsonFile) {
                 const formData = new FormData();
-                formData.append('file', file);
+                formData.append('jsonFile', jsonFile);
+                formData.append('imageFile', imageFile);
 
                 const response = await fetch('/generate_excel', {
                     method: 'POST',
-                    body: file,
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
+                    body: formData // Use formData to include both files
                 });
 
                 if (response.ok) {
